@@ -11,13 +11,14 @@ class Card:
         self.weatherType = weatherType
 
     def __repr__(self):
-        return f"Name: {self.name}, Damage: {self.image}, Is Legend: {self.isLegend}"
+        return f"Name: {self.name}, Damage: {self.damage}, Is Legend: {self.isLegend}"
 
 class HouseCard(Card):
-    def __init__(self, house, name, image, damage, isLegend, specialAbility=None, weatherType=None, isLeader=False):
+    def __init__(self, house, name, image, damage, field, isLegend, specialAbility=None, isLeader=False):
         self.house = house
+        self.field = field
         self.isLeader = isLeader
-        super().__init__(name, image, damage, isLegend, specialAbility, weatherType)
+        super().__init__(name, image, damage, isLegend, specialAbility, weatherType=None)
     
     def __repr__(self):
         base_rpr = super().__repr__()
@@ -26,33 +27,56 @@ class HouseCard(Card):
 def sha256sum(filename):
     with open(filename, 'rb', buffering=0) as f:
         return hashlib.file_digest(f, 'sha256').hexdigest()
-    
-def merge(left, right, hash):
-    result = []
-    if left[0] <= right[0]:
-        result.append(left[0])
-        left.remove(0)
 
-    
-def mergeSort(lHashes, hash):
-    iSize = len(lHashes)
-    if iSize <= 1:
-        return lHashes
-    
-    iMedium = iSize / 2, iStart = 0, iFinal = iSize - 1
-    left = merge(lHashes[:iMedium - 1])
-    right = merge(lHashes[iMedium:iFinal])
-    return merge(left, right, hash)
+#Maybe in the future I can check which is the best search algorithm for this situation.
+def linearSearch(lHashes, hash):
+    for i in lHashes:
+        if i["hash"] == hash:
+            return i
 
-def getCard():
+def getCard(url):
     # this is supposed to be the azure blob url, however right now will be a path
-    #hash = sha256sum(url)
+    hash = sha256sum(url)
+    # Read json with all the info of the cards
     file = open("C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\cardsInfo\\cardsInfo.json", "r")
+    # This returns a list
     lines = file.readlines()
+    # Convert it to string, so json library can load it
     objects = ''.join(lines)
     x = json.loads(objects)
-    print("SIZE:", len(x))
+    isLegend = False
+    weatherType = None
 
-    return x[0]["hash"]
+    cardInfo = linearSearch(x, hash)
 
-print(getCard())
+    # Json crashes and show an error if object is not in the file. We gotta catch the error.
+    try:
+        if cardInfo["isLegend"]:
+            isLegend = True
+    except KeyError:
+        isLegend = False
+
+    try:
+        if cardInfo["weatherType"]:
+            weatherType = cardInfo["weatherType"]
+    except KeyError:
+        weatherType = None
+
+    try:
+        if cardInfo["isLeader"]:
+            isLeader = True
+    except KeyError:
+        isLeader = False
+
+    #if weatherType... Manage weather
+
+    card = HouseCard (
+        cardInfo["house"],
+        cardInfo["name"],
+        "C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\images\\Scoia'tel\\Schirru.png",
+        cardInfo["damage"],
+        cardInfo["field"],
+        isLegend,
+        cardInfo["ability"],
+        isLeader)
+    return card

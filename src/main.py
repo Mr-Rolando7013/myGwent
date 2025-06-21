@@ -1,4 +1,16 @@
 import pygame
+from game import Game
+from user import User
+
+cards = [
+    "C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\images\\Scoia'tel\\Schirru.png",
+    "C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\images\\Scoia'tel\\Barclay Els.png",
+    "C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\images\\Scoia'tel\\Toruviel.png",
+    "C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\images\\Scoia'tel\\Vrihedd Brigade Recruit.png",
+    "C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\images\\Scoia'tel\\Vrihedd Brigade Veteran 1.png",
+    "C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\images\\Scoia'tel\\Vrihedd Brigade Veteran 2.png",
+    "C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\images\\Scoia'tel\\Yaevinn.png"
+]
 
 pygame.init()
 
@@ -6,6 +18,11 @@ screen = pygame.display.set_mode((1280, 800))
 clock = pygame.time.Clock()
 running = True
 bg = pygame.image.load("C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\images\\board_optimized.png")
+user1 = User("Rolando", 0, [], None)
+user2 = User("Elena", 0, [], None)
+game = Game(user1, user2, 0, 0)
+game.startGame(cards)
+print("User 1: ", user1, "User 2: ", user2)
 
 while running:
     # For loop to manage quit game
@@ -15,8 +32,12 @@ while running:
     #This helped me to add a background image
     screen.blit(bg, (0, 0))
     pygame.display.flip()
+    
+
     # To-Do: Add Icon
     pygame.display.set_caption("My Gwent Game")
+
+
     
     #FPS
     clock.tick(60)
