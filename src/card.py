@@ -1,10 +1,15 @@
 import hashlib
 import json
+import pygame
 
-class Card:
+class Card(pygame.sprite.Sprite):
     def __init__(self, name, image, damage, isLegend=False, specialAbility=None, weatherType=None):
+        pygame.sprite.Sprite.__init__(self)
         self.name = name
-        self.image = image
+        self.image = pygame.image.load(image).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (100, 120))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (10, 10)
         self.damage = damage
         self.isLegend = isLegend
         self.specialAbility = specialAbility
