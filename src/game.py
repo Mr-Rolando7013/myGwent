@@ -7,9 +7,9 @@ class Game:
         self.pointsUser1 = pointsUser1
         self.pointsUser2 = pointsUser2
 
-    def startGame(self, cards):
-        self.user1.assignDeck(cards)
-        self.user2.assignDeck(cards)
+    def startGame(self, cardsUser1, cardsUser2):
+        self.user1.assignDeck(cardsUser1)
+        self.user2.assignDeck(cardsUser2)
 
     def __repr__(self):
         return f"User 1: {self.user1}, User 2: {self.user2}, points user 1: {self.pointsUser1}, points user 2: {self.pointsUser2}"

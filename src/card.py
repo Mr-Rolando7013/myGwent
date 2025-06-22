@@ -9,11 +9,14 @@ class Card(pygame.sprite.Sprite):
         self.image = pygame.image.load(image).convert_alpha()
         self.image = pygame.transform.scale(self.image, (100, 120))
         self.rect = self.image.get_rect()
-        self.rect.topleft = (10, 10)
         self.damage = damage
         self.isLegend = isLegend
         self.specialAbility = specialAbility
         self.weatherType = weatherType
+    
+    def draw(self, surface, x, y):
+        self.rect.topleft = (x, y)
+        surface.blit(self.image, self.rect)
 
     def __repr__(self):
         return f"Name: {self.name}, Damage: {self.damage}, Is Legend: {self.isLegend}"
@@ -78,7 +81,7 @@ def getCard(url):
     card = HouseCard (
         cardInfo["house"],
         cardInfo["name"],
-        "C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\images\\Scoia'tel\\Schirru.png",
+        url,
         cardInfo["damage"],
         cardInfo["field"],
         isLegend,

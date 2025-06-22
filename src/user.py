@@ -12,6 +12,7 @@ class User:
             card = getCard(cards[x])
             self.deckCards.append(card)
         
+        #print("DECK CARDSSS:", self.deckCards)
         return self.deckCards
     
     def assignLeaderCard(self, card):
