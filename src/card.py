@@ -13,10 +13,22 @@ class Card(pygame.sprite.Sprite):
         self.isLegend = isLegend
         self.specialAbility = specialAbility
         self.weatherType = weatherType
+        #Need for drag and drop
+        self.dragging = False
+        self.offset_x = 0
+        self.offset_y = 0
+        self.prev_rect = self.rect.copy()
     
-    def draw(self, surface, x, y):
-        self.rect.topleft = (x, y)
+    def draw(self, surface, x=None, y=None):
+        # Only update position if not dragging and position is different
+        if not self.dragging and x is not None and y is not None:
+            if self.rect.topleft != (x, y):
+                self.rect.topleft = (x, y)
         surface.blit(self.image, self.rect)
+        #else:
+            #self.prev_rect = self.rect.copy()
+            #self.rect.topleft = pygame.mouse.get_pos()
+            #surface.blit(self.image, self.prev_rect, area=self.prev_rect)
 
     def __repr__(self):
         return f"Name: {self.name}, Damage: {self.damage}, Is Legend: {self.isLegend}"

@@ -43,24 +43,60 @@ user2_cards.add(user2.deckCards)
 y_start = 50        # Starting Y position
 y_spacing = 150     # Vertical space between cards
 
+#Needed for drag and drop
+dragged_card = None
+
 while running:
     # For loop to manage quit game
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            for card in user1_cards:
+                if card.rect.collidepoint(event.pos):
+                    dragged_card = card
+                    card.dragging = True
+                    mouse_x, mouse_y = event.pos
+                    card.offset_x = card.rect.x - mouse_x
+                    card.offset_y = card.rect.y - mouse_y
+                    #user1_cards.remove(card)
+            for card in user2_cards:
+                if card.rect.collidepoint(event.pos):
+                    dragged_card = card
+                    card.dragging = True
+                    mouse_x, mouse_y = event.pos
+                    card.offset_x = card.rect.x - mouse_x
+                    card.offset_y = card.rect.y - mouse_y
+                    #user2_cards.remove(card)
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if dragged_card:
+                dragged_card.dragging = False
+                #dragged_card.draw(screen, dragged_card.rect.x, dragged_card.rect.y)
+                dragged_card = None
+        elif event.type == pygame.MOUSEMOTION:
+            if dragged_card and dragged_card.dragging:
+                #dragged_card.kill()
+                mouse_x, mouse_y = event.pos
+                dragged_card.rect.x = mouse_x + dragged_card.offset_x
+                dragged_card.rect.y = mouse_y + dragged_card.offset_y
+
     #This helped me to add a background image
-    screen.blit(bg, (110, 110))
+    #screen.blit(bg, (0, 0))
+    if dragged_card:
+        dragged_card.draw(screen, dragged_card.rect.x, dragged_card.rect.y)
     #user1_cards.draw(screen)
     for index, card in enumerate(user1_cards):
-        x = 10
-        y = y_start + index * y_spacing  # Y increases with each card
+        if not card.dragging:
+            x = 10
+            y = y_start + index * y_spacing  # Y increases with each card
         card.draw(screen, x, y)
 
     for index, card in enumerate(user2_cards):
-        x = 1200
-        y = y_start + index * y_spacing
+        if not card.dragging:
+            x = 1200
+            y = y_start + index * y_spacing
         card.draw(screen, x, y)
-
+    screen.blit(bg, (110, 110))
     pygame.display.flip()
     
 
