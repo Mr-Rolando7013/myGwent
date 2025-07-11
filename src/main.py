@@ -30,7 +30,7 @@ bg = pygame.image.load("C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\as
 bg = pygame.transform.scale(bg, (1080, 900))
 user1 = User("Rolando", 0, [], None)
 user2 = User("Elena", 0, [], None)
-game = Game(user1, user2, 0, 0)
+game = Game(user1, user2, 0, 0, True, False)
 game.startGame(cardsUser1, cardsUser2)
 
 user1_cards = list(user1.deckCards)
@@ -78,75 +78,84 @@ while running:
             running = False
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            for card in user1_cards:
-                if card in user1_cards and card.rect.collidepoint(event.pos):
-                    if not card.on_board:
-                        card.on_board = True
-                        user1_cards.remove(card)
-                        user1_battlefieldCards.append(card)
-                        # Move to battlefield position
-                        if card.field == "bow":
-                            card.rect.topleft = (bow_x_start + bow_index * 110, bow_y)
-                            bow_index += 1
-                            
-                        elif card.field == "sword":
-                            # Move to battlefield position 
-                            card.rect.topleft = (sword_x_start + sword_index * 110, sword_y)
-                            sword_index += 1
-                            
-                        elif card.field == "range":
-                            # Move to siege position
-                            card.rect.topleft = (range_x_start + range_index * 110, range_y)
-                            range_index += 1
-                            
-                        elif card.field == "sword and bow":
-                            answer = sword_or_bow()
-                            print("Answer:", answer)
-                            if answer == "sword":
-                                card.rect.topleft = (sword_x_start + sword_index * 110, sword_y)
-                                sword_index += 1
-                            elif answer == "bow":
+            if game.isUser1Turn == True:
+                for card in user1_cards:
+                    print(f"User 1's turn: {game.isUser1Turn}, User 2's turn: {game.isUser2Turn}")
+                    game.isUser1Turn = False
+                    game.isUser2Turn = True
+                    if card in user1_cards and card.rect.collidepoint(event.pos):
+                        if not card.on_board:
+                            card.on_board = True
+                            user1_cards.remove(card)
+                            user1_battlefieldCards.append(card)
+                            # Move to battlefield position
+                            if card.field == "bow":
                                 card.rect.topleft = (bow_x_start + bow_index * 110, bow_y)
                                 bow_index += 1
-                            else:
-                                print("Invalid choice. Card not placed.")
+                                    
+                            elif card.field == "sword":
+                                # Move to battlefield position 
+                                card.rect.topleft = (sword_x_start + sword_index * 110, sword_y)
+                                sword_index += 1
+                                    
+                            elif card.field == "range":
+                                # Move to siege position
+                                card.rect.topleft = (range_x_start + range_index * 110, range_y)
+                                range_index += 1
+                                
+                            elif card.field == "sword and bow":
+                                answer = sword_or_bow()
+                                print("Answer:", answer)
+                                if answer == "sword":
+                                    card.rect.topleft = (sword_x_start + sword_index * 110, sword_y)
+                                    sword_index += 1
+                                elif answer == "bow":
+                                    card.rect.topleft = (bow_x_start + bow_index * 110, bow_y)
+                                    bow_index += 1
+                                else:
+                                    print("Invalid choice. Card not placed.")
+                            break
                         break
-                    break
                 
-                    
-            for card in user2_cards:
-                if card in user2_cards and card.rect.collidepoint(event.pos):
-                    if not card.on_board:
-                        user2_cards.remove(card)
-                        user2_battlefieldCards.append(card)
-                        card.on_board = True
-                        # Move to battlefield position
-                        if card.field == "bow":
-                            card.rect.topleft = (bow_x2_start + bow_index2 * 110, bow_y2)
-                            bow_index2 += 1
-                        elif card.field == "sword":
-                            # Move to battlefield position 
-                            card.rect.topleft = (sword_x2_start + sword_index2 * 110, sword_y2)
-                            sword_index2 += 1
-                        elif card.field == "range":
-                            print("Range card placed in siege position.")
-                            # Move to siege position
-                            card.rect.topleft = (range_x2_start + range_index2 * 110, range_y2)
-                            range_index2 += 1
+            elif game.isUser2Turn == True:
+                for card in user2_cards:
+                    if game.isUser2Turn == True:
+                        game.isUser2Turn = False
+                        game.isUser1Turn = True
+                        print(f"User 1's turn: {game.isUser1Turn}, User 2's turn: {game.isUser2Turn}")
+                        # Check if the card is in user2's hand and if it collides with the mouse click
+                        if card in user2_cards and card.rect.collidepoint(event.pos):
+                            if not card.on_board:
+                                user2_cards.remove(card)
+                                user2_battlefieldCards.append(card)
+                                card.on_board = True
+                                # Move to battlefield position
+                                if card.field == "bow":
+                                    card.rect.topleft = (bow_x2_start + bow_index2 * 110, bow_y2)
+                                    bow_index2 += 1
+                                elif card.field == "sword":
+                                    # Move to battlefield position 
+                                    card.rect.topleft = (sword_x2_start + sword_index2 * 110, sword_y2)
+                                    sword_index2 += 1
+                                elif card.field == "range":
+                                    print("Range card placed in siege position.")
+                                    # Move to siege position
+                                    card.rect.topleft = (range_x2_start + range_index2 * 110, range_y2)
+                                    range_index2 += 1
 
-                        elif card.field == "sword and bow":
-                            answer = sword_or_bow()
-                            print("Answer:", answer)
-                            if answer == "sword":
-                                card.rect.topleft = (sword_x2_start + sword_index2 * 110, sword_y2)
-                                sword_index2 += 1
-                            elif answer == "bow":
-                                card.rect.topleft = (bow_x2_start + bow_index2 * 110, bow_y2)
-                                bow_index2 += 1
-                            else:
-                                print("Invalid choice. Card not placed.")
-                        break
-                    break
+                                elif card.field == "sword and bow":
+                                    answer = sword_or_bow()
+                                    print("Answer:", answer)
+                                    if answer == "sword":
+                                        card.rect.topleft = (sword_x2_start + sword_index2 * 110, sword_y2)
+                                        sword_index2 += 1
+                                    elif answer == "bow":
+                                        card.rect.topleft = (bow_x2_start + bow_index2 * 110, bow_y2)
+                                        bow_index2 += 1
+                                    else:
+                                        print("Invalid choice. Card not placed.")
+                                break
+                            break
 
     #This helped me to add a background image
     screen.fill((0,0,0))
