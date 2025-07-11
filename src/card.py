@@ -13,10 +13,12 @@ class Card(pygame.sprite.Sprite):
         self.isLegend = isLegend
         self.specialAbility = specialAbility
         self.weatherType = weatherType
-    
-    def draw(self, surface, x, y):
-        self.rect.topleft = (x, y)
+
+        self.on_board = False
+
+    def draw(self, surface):
         surface.blit(self.image, self.rect)
+
 
     def __repr__(self):
         return f"Name: {self.name}, Damage: {self.damage}, Is Legend: {self.isLegend}"
