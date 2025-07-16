@@ -64,6 +64,20 @@ range_y2 = 750
 range_x2_start = 460
 range_index2 = 0
 
+font = pygame.font.Font(None, 30)
+
+points_rect_x = 200
+points_rect_y = 200
+points_width = 60
+points_height = 30
+value1 = 0
+
+points2_rect_x = 300
+points2_rect_y = 200
+points2_width = 60
+points2_height = 30
+value2 = 0
+
 for index, card in enumerate(user1_cards):
     card.rect.topleft = (10, y_start + index * y_spacing)
 
@@ -81,8 +95,6 @@ while running:
             if game.isUser1Turn == True:
                 for card in user1_cards:
                     print(f"User 1's turn: {game.isUser1Turn}, User 2's turn: {game.isUser2Turn}")
-                    game.isUser1Turn = False
-                    game.isUser2Turn = True
                     if card in user1_cards and card.rect.collidepoint(event.pos):
                         if not card.on_board:
                             card.on_board = True
@@ -114,14 +126,16 @@ while running:
                                     bow_index += 1
                                 else:
                                     print("Invalid choice. Card not placed.")
+                            #The rounds system still has some bugs, but it works for now
+                            game.isUser1Turn = False
+                            game.isUser2Turn = True
+                            value1 += card.damage
                             break
                         break
                 
             elif game.isUser2Turn == True:
                 for card in user2_cards:
                     if game.isUser2Turn == True:
-                        game.isUser2Turn = False
-                        game.isUser1Turn = True
                         print(f"User 1's turn: {game.isUser1Turn}, User 2's turn: {game.isUser2Turn}")
                         # Check if the card is in user2's hand and if it collides with the mouse click
                         if card in user2_cards and card.rect.collidepoint(event.pos):
@@ -154,12 +168,27 @@ while running:
                                         bow_index2 += 1
                                     else:
                                         print("Invalid choice. Card not placed.")
+                                game.isUser2Turn = False
+                                game.isUser1Turn = True
+                                value2 += card.damage
                                 break
                             break
-
+    
     #This helped me to add a background image
     screen.fill((0,0,0))
     screen.blit(bg, (110, 0))
+
+    pygame.draw.rect(screen, (255, 255, 255), (points_rect_x, points_rect_y, points_width, points_height))
+    pygame.draw.rect(screen, (255, 255, 255), (points2_rect_x, points2_rect_y, points2_width, points2_height))
+
+    text = font.render(str(value1), True, (0, 0, 0))
+    text_rect = text.get_rect(center=(points_rect_x + points_width // 2, points_rect_y + points_height // 2))
+
+    text2 = font.render(str(value2), True, (0, 0, 0))
+    text_rect2 = text2.get_rect(center=(points2_rect_x + points2_width // 2, points2_rect_y + points2_height // 2))
+    screen.blit(text2, text_rect2)
+    screen.blit(text, text_rect)
+
     for card in user1_cards:
         screen.blit(card.image, card.rect)
     
@@ -171,6 +200,19 @@ while running:
 
     for card in user2_battlefieldCards:
         screen.blit(card.image, card.rect)
+
+    if len(user1_cards) == 0 and len(user2_cards) == 0:
+        if value1 > value2:
+            user1.gamesWon += 1
+            print("User 1 wins!")
+            running = False
+        elif value2 > value1:
+            user2.gamesWon += 1
+            print("User 2 wins!")
+            running = False
+        else:
+            print("It's a tie!")
+            running = False
 
     #pygame.display.update()
     pygame.display.flip()
