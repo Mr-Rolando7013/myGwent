@@ -23,6 +23,8 @@ cardsUser2 = [
 
 pygame.init()
 
+pygame.mixer.music.load("C:\\Users\\byL0r3t\\Desktop\\pythonProjects\\myGwent\\assets\\Syanna's Theme  The Witcher 3_ Wild Hunt  Blood and Wine.mp3")
+pygame.mixer.music.play()
 screen = pygame.display.set_mode((1380, 870))
 clock = pygame.time.Clock()
 running = True
@@ -67,13 +69,13 @@ range_index2 = 0
 font = pygame.font.Font(None, 30)
 
 points_rect_x = 200
-points_rect_y = 200
+points_rect_y = 270
 points_width = 60
 points_height = 30
 value1 = 0
 
-points2_rect_x = 300
-points2_rect_y = 200
+points2_rect_x = 200
+points2_rect_y = 600
 points2_width = 60
 points2_height = 30
 value2 = 0
