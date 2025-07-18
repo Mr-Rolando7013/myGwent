@@ -68,12 +68,14 @@ range_index2 = 0
 
 font = pygame.font.Font(None, 30)
 
+# Rectangles for points display
 points_rect_x = 200
 points_rect_y = 270
 points_width = 60
 points_height = 30
 value1 = 0
 
+# Rectangles for points display for user 2
 points2_rect_x = 200
 points2_rect_y = 600
 points2_width = 60
@@ -94,13 +96,16 @@ while running:
             running = False
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            #Rounds system
             if game.isUser1Turn == True:
                 for card in user1_cards:
                     print(f"User 1's turn: {game.isUser1Turn}, User 2's turn: {game.isUser2Turn}")
                     if card in user1_cards and card.rect.collidepoint(event.pos):
                         if not card.on_board:
                             card.on_board = True
+                            # Delete the card from hand
                             user1_cards.remove(card)
+                            # Add the card to the battlefield
                             user1_battlefieldCards.append(card)
                             # Move to battlefield position
                             if card.field == "bow":
@@ -179,15 +184,16 @@ while running:
     #This helped me to add a background image
     screen.fill((0,0,0))
     screen.blit(bg, (110, 0))
-
+    # Draw rectangles for points display
     pygame.draw.rect(screen, (255, 255, 255), (points_rect_x, points_rect_y, points_width, points_height))
     pygame.draw.rect(screen, (255, 255, 255), (points2_rect_x, points2_rect_y, points2_width, points2_height))
-
+    # Display points for user 1
     text = font.render(str(value1), True, (0, 0, 0))
     text_rect = text.get_rect(center=(points_rect_x + points_width // 2, points_rect_y + points_height // 2))
-
+    # Display points for user 2
     text2 = font.render(str(value2), True, (0, 0, 0))
     text_rect2 = text2.get_rect(center=(points2_rect_x + points2_width // 2, points2_rect_y + points2_height // 2))
+    # Blit the text onto the screen
     screen.blit(text2, text_rect2)
     screen.blit(text, text_rect)
 

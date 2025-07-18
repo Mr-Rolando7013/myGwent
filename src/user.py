@@ -8,11 +8,11 @@ class User:
         self.leaderCard = leaderCard
     
     def assignDeck(self, cards):
+        # cards is a list of paths to the cards.
         for x, _ in enumerate(cards):
             card = getCard(cards[x])
             self.deckCards.append(card)
         
-        #print("DECK CARDSSS:", self.deckCards)
         return self.deckCards
     
     def assignLeaderCard(self, card):

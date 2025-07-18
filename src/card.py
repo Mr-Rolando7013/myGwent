@@ -13,7 +13,7 @@ class Card(pygame.sprite.Sprite):
         self.isLegend = isLegend
         self.specialAbility = specialAbility
         self.weatherType = weatherType
-
+        # This is used to check if the card is on the board or not
         self.on_board = False
 
     def draw(self, surface):
@@ -56,10 +56,11 @@ def getCard(url):
     x = json.loads(objects)
     isLegend = False
     weatherType = None
-
+    # Get the card info from the json file
     cardInfo = linearSearch(x, hash)
 
     # Json crashes and show an error if object is not in the file. We gotta catch the error.
+    # In the json, not all cards have the same keys, so we need to check if the key exists before accessing it.
     try:
         if cardInfo["isLegend"]:
             isLegend = True
